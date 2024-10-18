@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+    <style>
+        /* 基本重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 50px;
+        }
+
+        #register {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+        }
+
+        #vertifyCodeButton {
+            background: none; /* 去除背景 */
+            border: none; /* 去除边框 */
+            padding: 0; /* 去除内边距 */
+            margin: 0; /* 去除外边距 */
+            color: inherit; /* 继承父元素文字颜色 */
+            font: inherit; /* 继承父元素字体样式 */
+            text-align: left; /* 文本左对齐，可以根据需要调整 */
+            padding:10px 0;
+        }
+    </style>
+        </head>
+
+<body>
+<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- 导入axios库，用于发送Ajax请求 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<div id="register">
+    <h2>注册</h2>
+    <form id="registrationForm">
+        <div class="form-group">
+            <input type="text" id="id" placeholder="用户名" required v-model="id">
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" placeholder="邮箱" required v-model="email">
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder="密码" required v-model="password">
+        </div>
+        <div class="form-group">
+            <input type="text" id="captcha" placeholder="验证码" required v-model="inputVertifyCode" @keyup.enter="register" >
+            验证码：<input id="vertifyCodeButton" type="button" @click="getVertifyCode(4)" v-model="vertifyCode"></p>
+        </div>
+        <div class="form-group">
+            <input @click="register" type="button" value="注册">
+        </div>
+    </form>
+    <div id="message"></div>
+</div>
+<script>
+
+    new Vue({
+        el: '#register',
+        data: {
+            id: '',
+            password: '',
+            email: '',
+            vertifyCode: '点击刷新获取验证码',
+            inputVertifyCode: ''
+        },
+        methods: {
+            getVertifyCode: function (n) {
+                var nums = '0123456789'
+                var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                var code = '';
+                var tempNum = Math.floor(Math.random() * 4); // 随机验证码中数字的位置
+                for (var i = 0; i < n; i++) {
+                    if (i === tempNum) {
+                        code += nums[Math.floor(Math.random() * nums.length)];
+                    }
+                    else {
+                        code += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                }
+                this.vertifyCode = code;
+            },
+            register: function () {
+                if (this.email == "" || this.password == "" || this.id == "") {
+                    alert("账号密码或邮箱信息不能为空")
+                }
+                else {
+                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if(this.email.match(regex)){
+                        if (this.vertifyCode != this.inputVertifyCode) {
+                            alert("验证码错误");
+                        }
+                        else {
+                            url = "http://localhost:8080/signUp/";
+                            var data = {
+                                id: this.id,
+                                password: this.password,
+                                email: this.email
+                            };
+                            axios.post(url, data).then(function (response) {
+                                console.log(response);
+                                alert("注册成功");
+                                window.location.href = "login.html";
+                            }).catch(function (error) {
+                                console.log(error);
+                                alert("注册失败");
+                            });
+                        }
+                    }
+                    else{
+                        alert("邮箱格式不正确");
+                    }
+                }
+            }
+        }
+    })
+</script>
+
+</body>
+
+</html>
