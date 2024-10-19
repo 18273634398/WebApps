@@ -1,21 +1,24 @@
 package com.hutb.webapp.Controller;
 
-import com.hutb.webapp.Mapper.UserMapper;
-import com.hutb.webapp.Pojo.Message;
-import com.hutb.webapp.Pojo.SignInRequest;
-import com.hutb.webapp.Pojo.SignUpRequest;
+import com.hutb.webapp.Data;
+import com.hutb.webapp.Mapper.Mapper;
+import com.hutb.webapp.Pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.hutb.webapp.Pojo.Message.success;
 
 @RestController
+@RequestMapping("/api")
 public class API {
     @Autowired
-    private UserMapper userMapper;
+    private Mapper mapper;
+
     // 【实际API】
     // 登录API
     @RequestMapping(value = "/signIn")
@@ -23,20 +26,23 @@ public class API {
     // public Message SignIn(String username, String password) { SpringBoot 方法1
     public Message SignIn(SignInRequest request) { // SpringBoot 方法2 面向对象
         System.out.println("Get a signIn request");
-        if (!(userMapper.signIn(request)== null)) {
+        User user = mapper.signIn(request);
+        System.out.println(user);
+        System.out.println(user.getId());
+        if (user.getId()!=null) {
             return success("Login success");
         }
         else {
-            return success("Login failed,Account or password error");
+            return new Message("failed",200,"Count or password error");
         }
     }
 
     @RequestMapping(value = "/signUp",method = RequestMethod.POST)
     public Message SignUp(SignUpRequest request) {
         System.out.println("Get a signUp request");
-        Integer id = userMapper.findUserById(request.getId());
-        if(userMapper.findUserById(id) == null){ // 判断账号是否已经存在
-            Integer result = userMapper.addUser(request);
+        User user = mapper.findUserById(request.getId());
+        if(user == null){ // 判断账号是否已经存在
+            Integer result = mapper.addUser(request);
             System.out.println("result: "+result);
             if(result!=null) // 注册成功
                 return success("SignUp success");
@@ -44,9 +50,36 @@ public class API {
                 return new Message("SignUp failed",500,"Server Error");
         }
         else{
-            return success("SignUp failed,Because the id has been used");
+            return new Message("failed",200,"User already exist");
         }
     }
+
+    @RequestMapping(value = "/blog-get-top")
+    public List<Blog> BlogGetTop() {
+        System.out.println("Get a blog-get-top request");
+        return mapper.findTopBlog();
+    }
+
+    @RequestMapping(value = "/blog_{tempId}")
+    public String tmpplatBlog() {
+        System.out.println("Get a blog-get request");
+        return Data.html;
+    }
+
+
+    @RequestMapping(value = "/blog/id={idValue}")
+    public Blog blogGet(@PathVariable("idValue") Integer id) {
+        System.out.println("Get a blog-get request");
+        return mapper.findBlogById(id);
+    }
+
+
+
+
+
+
+
+
 
 
 

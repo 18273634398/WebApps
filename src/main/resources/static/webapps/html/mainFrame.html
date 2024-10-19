@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录播课？鲁博客！</title>
+    <link rel="icon" type="image/x-icon" href="../source/picture/CPC_Logo.png"/>
+    <link rel="stylesheet" href="../css/mainFrame.css">
+</head>
+<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>鲁博客 - 个人博客网</h1>
+        <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon">
+    </div>
+    <div id="image-section">
+        <button  class="buttonAS" @click="sub()"><</button>
+        <img :src="imgArr[index]" alt="网站首页图" width="1312px" height="552px">
+        <button  class="buttonAS" @click="add()">></button>
+
+    </div>
+    <div class="blog-section">
+        <article>
+            <h2>博客文章 1 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+        <article>
+            <h2>博客文章 2 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+        <article>
+            <h2>博客文章 3 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+    </div>
+</div>
+
+<div id="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1">中国共产党基本理论学习</a>
+    <a href="#" id="func2">功能1</a>
+    <a href="#" id="func3">功能2</a>
+    <a href="#" id="func4">功能3</a>
+    <a href="./weatherFrame.html" id="func5">天气查询</a>
+    <!-- 更多功能链接 -->
+</div>
+<script src="../js/mainFrame.js"></script>
+</body>
+</html>

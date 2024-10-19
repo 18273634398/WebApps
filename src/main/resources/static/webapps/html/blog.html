@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章标题</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #d33837;
+            background-color: #fff;
+            /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+        }
+        #topTitle {
+            margin-left: 2em;
+            font-size: 28px;
+            color: #d33837;
+        }
+        .headers h1 {
+            margin: 20px 0 0 0;
+            font-size: 2.0em;
+            font-weight: bold;
+            color: #333;
+        }
+        .header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .header p {
+            color: #a4a4a4;
+            font-size: 0.9em;
+        }
+
+       .textContent {
+            text-indent: 2em;
+            line-height: 1.8;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        .content {
+            margin-top: 20px;
+        }
+
+        .image-placeholder {
+            text-align: center;
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<body>
+<div id="container">
+    <div class="headers">
+        <div class="header">
+            <h1 id="topTitle">鲁博客 - 个人博客网</h1>
+            <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon">
+        </div>
+        <h1 class="textTitle" v-text="textTitle"></h1>
+        <p>
+            <span class="textDate" id="" v-text="textDate"></span>
+            <span>&nbsp;&nbsp;</span>
+            <span class="textAuthor" v-text="textAuthor"></span>
+        </p>
+    </div>
+    <div class="image-placeholder" v-show="srcImg">
+        <img :src="srcImg" :alt="srcImgDesc">
+    </div>
+    <div class="textContent">
+        <p class="text-content" v-text="textContent"></p>
+    </div>
+    <div class="video-placeholder" v-show="srcVedio">
+        <video controls>
+            <source :src="srcVedio" type="video/mp4">
+            您的浏览器不支持视频播放。
+        </video>
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            textTitle: '文章标题',
+            textDate: '2024-10-19',
+            textAuthor: '作者',
+            textContent: '文章内容',
+            srcImg: '',
+            srcVedio: '',
+            srcImgDesc: '图片描述'
+        },
+        mounted: function getBlogTop() {
+            var currentUrl = window.location.href;
+            var id = currentUrl.split("blog_")[1];
+            if (id!=-1) {
+                var url = "http://localhost:8080/api/blog/id=";
+                url += id;
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: "get",
+                    success: function (result) {
+                        console.log(result);
+                        this.textTitle = result.title;   // 更新文章标题
+                        this.textDate = result.date;     // 更新日期
+                        this.textAuthor = result.author;  // 更新作者
+                        this.textContent = result.content; // 更新内容
+                        this.srcImg = result.image;       // 更新图片地址
+                        this.srcVedio = result.video;     // 更新视频地址
+                        this.srcImgDesc = result.imageDesc; // 更新图片描述
+                    }.bind(this)  // 绑定 this 到当前 Vue 实例
+                });
+            } else {
+                alert("当前页面不存在")
+                window.location.href = "./mainFrame.html";
+            }
+        },
+        methods: {}
+    })
+</script>
+</html>
