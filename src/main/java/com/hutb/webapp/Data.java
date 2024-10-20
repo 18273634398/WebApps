@@ -61,17 +61,22 @@ public class Data {
             "            color: #a4a4a4;\n" +
             "            font-size: 0.9em;\n" +
             "        }\n" +
-            "\n" +
             "       .textContent {\n" +
             "            text-indent: 2em;\n" +
             "            line-height: 1.8;\n" +
             "            font-size: 1.1em;\n" +
             "            margin-top: 20px;\n" +
             "        }\n" +
-            "        .content {\n" +
-            "            margin-top: 20px;\n" +
+            "        .textAuthor{\n" +
+            "            color: #a4a4a4;\n" +
+            "            font-size: 0.9em;\n" +
+            "            margin-left: 10px;\n" +
             "        }\n" +
-            "\n" +
+            "        .textDate{\n" +
+            "            color: #a4a4a4;\n" +
+            "            font-size: 0.9em;\n" +
+            "            margin-left: 10px;\n" +
+            "        }\n" +
             "        .image-placeholder {\n" +
             "            text-align: center;\n" +
             "            margin-top: 20px;\n" +
@@ -88,7 +93,7 @@ public class Data {
             "    <div class=\"headers\">\n" +
             "        <div class=\"header\">\n" +
             "            <h1 id=\"topTitle\">鲁博客 - 个人博客网</h1>\n" +
-            "            <img src=\"../source/picture/CPC.jpeg\" alt=\"Logo\" id=\"menu-icon\">\n" +
+            "            <img src=\"https://img.picui.cn/free/2024/10/19/6713cb42a9def.jpeg\" alt=\"用户头像\" id=\"menu-icon\">\n" +
             "        </div>\n" +
             "        <h1 class=\"textTitle\" v-text=\"textTitle\"></h1>\n" +
             "        <p>\n" +

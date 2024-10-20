@@ -27,8 +27,6 @@ public class API {
     public Message SignIn(SignInRequest request) { // SpringBoot 方法2 面向对象
         System.out.println("Get a signIn request");
         User user = mapper.signIn(request);
-        System.out.println(user);
-        System.out.println(user.getId());
         if (user.getId()!=null) {
             return success("Login success");
         }

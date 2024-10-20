@@ -33,4 +33,7 @@ public interface Mapper {
 
     @Select("SELECT * FROM blog WHERE id = #{id}")
     public Blog findBlogById(@Param("id") Integer id);
+
+    @Select("Select isAdmin from user where id = #{id}")
+    public Integer isAdmin(@Param("id") Integer id);
 }

@@ -3,7 +3,7 @@ new Vue({
     data: {
         imgArr: [
             "../source/picture/CPC_ChuXin.png",
-            "../source/picture/CPC_Chuxin2.png"
+            "../source/picture/hutbPic1.jpg"
         ],
         index: 0
     },
@@ -28,14 +28,13 @@ new Vue({
                         window.location.href = '/api/blog_' + data.id;
                     });
                     blogSection.appendChild(article);
-
-
                 });
             }
         });
     },
     methods: {
         sub: function () {
+            console.log("sub");
             if (this.index > 0) {
                 this.index--;
             } else {
@@ -43,6 +42,7 @@ new Vue({
             }
         },
         add: function () {
+            console.log("add");
             if (this.index < this.imgArr.length - 1) {
                 this.index++;
             } else {

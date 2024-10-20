@@ -5,7 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>录播课？鲁博客！</title>
     <link rel="icon" type="image/x-icon" href="../source/picture/CPC_Logo.png"/>
-    <link rel="stylesheet" href="../css/mainFrame.css">
+<!--    <link rel="stylesheet" href="../css/mainFrame.css">-->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            background-color: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #d33837;
+            background-color: #fff;
+            /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+        }
+        .header h1 {
+            margin-left: 2em;
+            font-size: 28px;
+            color: #d33837;
+        }
+        .header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #sidebar {
+            width: 0;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(0,0,0,0.9);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        #sidebar a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+        #sidebar a:hover {
+            background-color: #555;
+        }
+        #sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+            cursor: pointer;
+            color: #fff;
+        }
+        #image-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #image-section img {
+            width: 100%;
+            max-width: 1000px;
+            max-height: 552px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .blog-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); */ /* 阴影效果 */
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .blog-section article {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .blog-section article:hover {
+            transform: translateY(-5px);
+        }
+        .blog-section article h2 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: #d33837;
+        }
+        .blog-section article p {
+            text-indent: 2em;
+        }
+        .buttonAS {
+            margin:0 10px;
+            padding: 0 10px;
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            background-color: #d33837;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .buttonAS:hover {
+            background-color: #c02b2b;
+        }
+
+        .buttonAS:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 105, 135, 0.5);
+        }
+
+        /* 可以添加一个激活状态的样式 */
+        .buttonAS:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -17,10 +156,9 @@
         <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon">
     </div>
     <div id="image-section">
-        <button  class="buttonAS" @click="sub()"><</button>
-        <img :src="imgArr[index]" alt="网站首页图" width="1312px" height="552px">
-        <button  class="buttonAS" @click="add()">></button>
-
+        <button class="buttonAS" @click="sub()"><</button>
+        <img :src="imgArr[index]" alt="网站首页图" width="1312px" height="452px" style="object-fit: contain;">
+        <button class="buttonAS" @click="add()">></button>
     </div>
     <div class="blog-section">
         <article>
@@ -41,12 +179,86 @@
 <div id="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
     <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1">中国共产党基本理论学习</a>
-    <a href="#" id="func2">功能1</a>
-    <a href="#" id="func3">功能2</a>
-    <a href="#" id="func4">功能3</a>
+    <a href="#" id="func2">发布博客</a>
+    <a href="#" id="func3">博客分类</a>
+    <a href="#" id="func4">博客搜索</a>
     <a href="./weatherFrame.html" id="func5">天气查询</a>
+    <a href="http://localhost:8080/webapps/html/signIn.html" id="func6"  rel="noopener" target="_blank">退出登录</a>
     <!-- 更多功能链接 -->
 </div>
-<script src="../js/mainFrame.js"></script>
+<script>
+    new Vue({
+        el: '#image-section',
+        data: {
+            imgArr: [
+                "../source/picture/CPC_ChuXin.png",
+                "../source/picture/hutbPic1.jpg"
+            ],
+            index: 0
+        },
+        mounted: function getBlogTop() {
+            var url = "http://localhost:8080/api/blog-get-top";
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function (result) {    // 如果响应成功了(有响应)，则执行此回调函数  result 表示后端返回的结果
+                    const blogSection = document.querySelector('.blog-section');
+                    blogSection.innerHTML = ''; // 清空现有内容
+                    result.forEach(data => {
+                        const article = document.createElement('article');
+                        article.innerHTML = `
+                            <h2>${data.title}</h2>
+                            <p>${data.summary}</p>
+                        `;
+                        // 为每个article添加点击事件
+                        article.addEventListener('click', function() {
+                            console.log('Article clicked:', data);
+                            window.location.href = '/api/blog_' + data.id;
+                        });
+                        blogSection.appendChild(article);
+                    });
+                }
+            });
+        },
+        methods: {
+            sub: function () {
+                console.log("sub");
+                if (this.index > 0) {
+                    this.index--;
+                } else {
+                    this.index = this.imgArr.length - 1;
+                }
+            },
+            add: function () {
+                console.log("add");
+                if (this.index < this.imgArr.length - 1) {
+                    this.index++;
+                } else {
+                    this.index = 0;
+                }
+            }
+        }
+    })
+
+    // 侧边栏切换函数
+    function toggleNav() {
+        var sidebarWidth = 280;
+        var sidebar = document.getElementById("sidebar");
+        if (sidebar.style.width === (sidebarWidth + "px")) {
+            sidebar.style.width = "0";
+        } else {
+            sidebar.style.width = sidebarWidth + "px";
+        }
+    }
+
+    // 获取元素并添加点击事件
+    var menuIcon = document.getElementById("menu-icon");
+    menuIcon.onclick = function () {
+        toggleNav();
+    };
+</script>
+<!--引用js文件似乎无法实现首页的图片切换-->
+<!--<script src="../js/mainFrame.js"></script>-->
 </body>
 </html>
