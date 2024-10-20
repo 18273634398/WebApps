@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客搜索结果</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 1200px;
+            height: 955.5px;
+            margin: 20px auto 0; /* 顶部边距为20px */
+            padding: 20px;
+            background-color: #f8f8f8; /* 极浅的灰白色背景 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .search-bar-container {
+            background-color: #f8f8f8; /* 极浅的灰白色背景 */
+            border-radius: 5px; /* 圆角 */
+            padding: 10px; /* 内部填充 */
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%; /* 搜索框容器占据所有横向空间 */
+        }
+        .search-bar-container input {
+            width: 100%; /* 输入框占据整个横向空间 */
+            padding: 10px;
+            font-size: 16px;
+            background-color: #e3e3e3; /* 浅灰色背景 */
+            border: none; /* 去除非搜索框的边框 */
+            border-radius: 5px; /* 圆角 */
+            color: black; /* 文字颜色 */
+            outline: none; /* 移除聚焦时的轮廓 */
+        }
+        .search-bar-container input::placeholder {
+            color: #aaa; /* 占位符颜色 */
+        }
+        .search-bar-container input:focus {
+            border-color: #c02b2b; /* 聚焦时边框颜色变深 */
+        }
+        .search-results {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .search-result {
+            border: 1px solid black; /* 黑色外框线 */
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px; /* 圆角 */
+        }
+        .search-result:last-child {
+            margin-bottom: 0;
+        }
+        .search-result h2 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: #d33837;
+        }
+        .search-result p {
+            margin: 5px 0;
+            text-indent: 2em;
+        }
+    </style>
+</head>
+<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- 导入jquery库，用于发送Ajax请求 -->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<body>
+<div class="container" id = "container">
+    <div class="search-bar-container">
+        <input type="text" placeholder="搜索博客..." v-model='searchText' @keyup.enter='search'>
+    </div>
+    <div class="search-results">
+        <div class="search-result">
+            <h2>博客文章标题1</h2>
+            <p>这里是博客文章的概要内容，可以是一段简短的介绍或者摘录...</p>
+        </div>
+        <div class="search-result">
+            <h2>博客文章标题2</h2>
+            <p>这里是博客文章的概要内容，可以是一段简短的介绍或者摘录...</p>
+        </div>
+        <!-- 更多搜索结果 -->
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#container',
+        data: {
+            searchText: ''
+        },
+        methods: {
+            search: function() {
+                url="http://localhost:8080/api/blog/search";
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: {
+                        "content": this.searchText
+                    },
+                    success: function (result) {
+                        if (result!= null) {
+                            alert("搜索成功");
+                            console.log(result);
+                        } else {
+                            var errorInfo = result.data;
+                            console.log(errorInfo);
+                            alert(errorInfo);
+                        }
+                    }
+                });
+            }
+        }
+    })
+</script>
+</html>

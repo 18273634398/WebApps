@@ -71,6 +71,30 @@ public class API {
         return mapper.findBlogById(id);
     }
 
+    @RequestMapping(value = "/blog/add",method = RequestMethod.POST)
+    public Message blogAdd(Blog blog) {
+        System.out.println("Get a blog-add request");
+        Integer result = mapper.addBlog(blog);
+        if(result!=null) // 添加成功
+            return success("Add blog success");
+        else // 添加失败
+            return new Message("Add blog failed",500,"Server Error");
+    }
+
+    @RequestMapping(value = "/blog/search",method = RequestMethod.POST)
+    public List<Blog> blogSearch(String content) {
+        System.out.println("Get a blog-search request");
+        content = "%"+content+"%"; // 进行模糊匹配 同时方便使用#防止sql注入
+        List<Blog> result = mapper.findBlogByContent(content);
+        if (result != null) // 搜索成功
+        {
+            return result;
+        } else // 搜索失败
+        {
+            return null;
+        }
+    }
+
 
 
 

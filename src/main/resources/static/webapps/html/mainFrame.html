@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>录播课？鲁博客！</title>
     <link rel="icon" type="image/x-icon" href="../source/picture/CPC_Logo.png"/>
-<!--    <link rel="stylesheet" href="../css/mainFrame.css">-->
     <style>
         body {
             margin: 0;
@@ -14,12 +13,14 @@
             background-color: #f4f4f4;
             color: #333;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             background-color: #fff;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -29,28 +30,32 @@
             background-color: #fff;
             /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
         }
+
         .header h1 {
             margin-left: 2em;
             font-size: 28px;
             color: #d33837;
         }
+
         .header img {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             cursor: pointer;
         }
+
         #sidebar {
             width: 0;
             height: 100%;
             position: fixed;
             left: 0;
             top: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
             overflow-x: hidden;
             transition: 0.5s;
             padding-top: 60px;
         }
+
         #sidebar a {
             padding: 10px 20px;
             text-decoration: none;
@@ -59,9 +64,11 @@
             display: block;
             transition: 0.3s;
         }
+
         #sidebar a:hover {
             background-color: #555;
         }
+
         #sidebar .closebtn {
             position: absolute;
             top: 0;
@@ -71,6 +78,7 @@
             cursor: pointer;
             color: #fff;
         }
+
         #image-section {
             display: flex;
             align-items: center;
@@ -78,13 +86,15 @@
             text-align: center;
             margin: 20px 0;
         }
+
         #image-section img {
             width: 100%;
             max-width: 1000px;
             max-height: 552px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
         .blog-section {
             display: flex;
             flex-direction: column;
@@ -95,6 +105,7 @@
             border-radius: 10px;
             margin-bottom: 20px;
         }
+
         .blog-section article {
             width: 100%;
             max-width: 800px;
@@ -102,23 +113,27 @@
             padding: 20px;
             background-color: #fff;
             border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             transition: transform 0.3s ease-in-out;
         }
+
         .blog-section article:hover {
             transform: translateY(-5px);
         }
+
         .blog-section article h2 {
             margin: 0 0 10px;
             font-size: 1.5em;
             color: #d33837;
         }
+
         .blog-section article p {
             text-indent: 2em;
         }
+
         .buttonAS {
-            margin:0 10px;
+            margin: 0 10px;
             padding: 0 10px;
             font-size: 30px;
             font-weight: bold;
@@ -144,16 +159,91 @@
         .buttonAS:active {
             transform: scale(0.98);
         }
+
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 弹窗内容样式 */
+        /* 弹窗内容样式 */
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 700px; /* 限制最大宽度 */
+            width: 70%; /* 占据水平方向70%的空间 */
+            max-height: 500px; /* 限制最大高度 */
+            height: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: auto; /* 在弹窗中居中 */
+            overflow-y: auto; /* 当内容超出高度时显示垂直滚动条 */
+            align-self: center;
+        }
+
+        /* 输入框和按钮样式 */
+        .modal-input, .modal-button {
+            width: 70%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #d33837;
+            border-radius: 5px;
+        }
+
+        /* 当输入框或文本域被聚焦时的样式 */
+        .modal-input:focus, .modal-button:focus {
+            outline: none; /* 移除默认的聚焦轮廓 */
+            border-color: #e2b604; /* 设置边框颜色为黄色 */
+            box-shadow: 0 0 5px #fdcf30; /* 可选：添加一个黄色的阴影效果 */
+        }
+
+        .modal-button {
+            margin-top: 20px;
+            background-color: #d33837;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-button:hover {
+            background-color: #ca2323;
+        }
+
+        /* 按钮容器样式 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* 取消按钮样式 */
+        .modal-button.cancel {
+            background-color: white;
+            color: #ca2323;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #f8f9fa;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 </head>
-<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 <body>
-<div class="container">
+<div class="container" id="app">
+    <!-- 合并后的HTML内容 -->
     <div class="header">
         <h1>鲁博客 - 个人博客网</h1>
-        <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon">
+        <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon" @click="toggleNav()">
     </div>
     <div id="image-section">
         <button class="buttonAS" @click="sub()"><</button>
@@ -174,27 +264,55 @@
             <p>这里是本篇博客文章的概要。</p>
         </article>
     </div>
+    <div id="sidebar">
+        <a href="javascript:void(0)" class="closebtn" @click="toggleNav()">&times;</a>
+        <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1">中国共产党基本理论学习</a>
+        <a href="#" id="func2" @click="openModal()">发布博客</a> <!-- 修改这里 -->
+        <a href="#" id="func3">博客分类</a>
+        <a href="./result.html" id="func4" >博客搜索</a>
+        <a href="./weatherFrame.html" id="func5">天气查询</a>
+        <a href="http://localhost:8080/webapps/html/signIn.html" id="func6" rel="noopener" target="_blank">退出登录</a>
+        <!-- 更多功能链接 -->
+    </div>
+    <!-- 弹窗 -->
+    <div id="modal" v-if="modalStatus" class="modal hidden">
+        <div class="modal-content">
+            <!-- 弹窗内容 -->
+            <p><span>标题：</span><input type="text" v-model="inputTitle" class="modal-input"
+                                        @keyup.enter="submitModal()"></p>
+            <p v-if="modalStatus === 1"><span>概述：</span><input type="text" v-model="inputSummary" class="modal-input">
+            </p>
+            <p v-if="modalStatus === 1"><span>日期：</span><input type="text" v-model="inputDate" class="modal-input">
+            </p>
+            <p v-if="modalStatus === 1"><span>作者：</span><input type="text" v-model="inputAuthor" class="modal-input">
+            </p>
+            <p v-if="modalStatus === 1"><span>正文：</span><textarea class="modal-input" v-model="inputContent" rows="10"
+                                                                    @keyup.enter="submitModal()"></textarea>
+            </p>
+            <div class="button-container">
+                <button class="modal-button cancel" @click="closeModal()">取消</button>
+                <button class="modal-button" @click="submitModal()">确认</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
-    <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1">中国共产党基本理论学习</a>
-    <a href="#" id="func2">发布博客</a>
-    <a href="#" id="func3">博客分类</a>
-    <a href="#" id="func4">博客搜索</a>
-    <a href="./weatherFrame.html" id="func5">天气查询</a>
-    <a href="http://localhost:8080/webapps/html/signIn.html" id="func6"  rel="noopener" target="_blank">退出登录</a>
-    <!-- 更多功能链接 -->
-</div>
 <script>
+    // Vue实例和方法
     new Vue({
-        el: '#image-section',
+        el: '#app',
         data: {
             imgArr: [
                 "../source/picture/CPC_ChuXin.png",
                 "../source/picture/hutbPic1.jpg"
             ],
-            index: 0
+            index: 0,
+            inputTitle: '',
+            inputSummary: '',
+            inputDate: '',
+            inputAuthor: '',
+            inputContent: '',
+            modalStatus: false
         },
         mounted: function getBlogTop() {
             var url = "http://localhost:8080/api/blog-get-top";
@@ -212,7 +330,7 @@
                             <p>${data.summary}</p>
                         `;
                         // 为每个article添加点击事件
-                        article.addEventListener('click', function() {
+                        article.addEventListener('click', function () {
                             console.log('Article clicked:', data);
                             window.location.href = '/api/blog_' + data.id;
                         });
@@ -237,28 +355,48 @@
                 } else {
                     this.index = 0;
                 }
+            },
+            openModal() {
+                this.modalStatus = true;
+            },
+            closeModal() {
+                this.modalStatus = false;
+            },
+            submitModal() {
+                url = "http://localhost:8080/api/blog/add";
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: {
+                        "title": this.inputTitle,
+                        "summary": this.inputSummary,
+                        "date": this.inputDate,
+                        "author": this.inputAuthor,
+                        "content": this.inputContent,
+                        "isTop": 1
+                    },
+                    success: function (result) {
+                        if (result.message == "success") {
+                            alert("发布成功");
+                            window.location.href = "./mainFrame.html";
+                        } else {
+                            var errorInfo = result.data;
+                            alert(errorInfo);
+                        }
+                    }
+                });
+            },
+            toggleNav() {
+                var sidebarWidth = 280;
+                var sidebar = document.getElementById("sidebar");
+                if (sidebar.style.width === (sidebarWidth + "px")) {
+                    sidebar.style.width = "0";
+                } else {
+                    sidebar.style.width = sidebarWidth + "px";
+                }
             }
         }
-    })
-
-    // 侧边栏切换函数
-    function toggleNav() {
-        var sidebarWidth = 280;
-        var sidebar = document.getElementById("sidebar");
-        if (sidebar.style.width === (sidebarWidth + "px")) {
-            sidebar.style.width = "0";
-        } else {
-            sidebar.style.width = sidebarWidth + "px";
-        }
-    }
-
-    // 获取元素并添加点击事件
-    var menuIcon = document.getElementById("menu-icon");
-    menuIcon.onclick = function () {
-        toggleNav();
-    };
+    });
 </script>
-<!--引用js文件似乎无法实现首页的图片切换-->
-<!--<script src="../js/mainFrame.js"></script>-->
 </body>
 </html>
