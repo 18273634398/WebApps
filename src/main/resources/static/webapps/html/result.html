@@ -12,17 +12,19 @@
             background-color: #f4f4f4;
             color: #333;
         }
+
         .container {
             width: 1200px;
             height: 955.5px;
             margin: 20px auto 0; /* 顶部边距为20px */
             padding: 20px;
             background-color: #f8f8f8; /* 极浅的灰白色背景 */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
+
         .search-bar-container {
             background-color: #f8f8f8; /* 极浅的灰白色背景 */
             border-radius: 5px; /* 圆角 */
@@ -31,6 +33,7 @@
             margin-bottom: 20px;
             width: 100%; /* 搜索框容器占据所有横向空间 */
         }
+
         .search-bar-container input {
             width: 100%; /* 输入框占据整个横向空间 */
             padding: 10px;
@@ -41,16 +44,20 @@
             color: black; /* 文字颜色 */
             outline: none; /* 移除聚焦时的轮廓 */
         }
+
         .search-bar-container input::placeholder {
             color: #aaa; /* 占位符颜色 */
         }
+
         .search-bar-container input:focus {
             border-color: #c02b2b; /* 聚焦时边框颜色变深 */
         }
+
         .search-results {
             flex-grow: 1;
             overflow-y: auto;
         }
+
         .search-result {
             border: 1px solid black; /* 黑色外框线 */
             margin-bottom: 20px;
@@ -58,14 +65,17 @@
             background-color: #fff;
             border-radius: 5px; /* 圆角 */
         }
+
         .search-result:last-child {
             margin-bottom: 0;
         }
+
         .search-result h2 {
             margin: 0 0 10px;
             font-size: 1.5em;
             color: #d33837;
         }
+
         .search-result p {
             margin: 5px 0;
             text-indent: 2em;
@@ -77,20 +87,12 @@
 <!-- 导入jquery库，用于发送Ajax请求 -->
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <body>
-<div class="container" id = "container">
+<div class="container" id="container">
     <div class="search-bar-container">
         <input type="text" placeholder="搜索博客..." v-model='searchText' @keyup.enter='search'>
     </div>
+    <p v-if="isNull" style="text-align: center;">暂无搜索结果</p>
     <div class="search-results">
-        <div class="search-result">
-            <h2>博客文章标题1</h2>
-            <p>这里是博客文章的概要内容，可以是一段简短的介绍或者摘录...</p>
-        </div>
-        <div class="search-result">
-            <h2>博客文章标题2</h2>
-            <p>这里是博客文章的概要内容，可以是一段简短的介绍或者摘录...</p>
-        </div>
-        <!-- 更多搜索结果 -->
     </div>
 </div>
 </body>
@@ -98,30 +100,54 @@
     new Vue({
         el: '#container',
         data: {
-            searchText: ''
+            searchText: '',
+            isNull:true
         },
         methods: {
-            search: function() {
-                url="http://localhost:8080/api/blog/search";
+            search: function () {
+                url = "http://localhost:8080/api/blog/search";
                 $.ajax({
                     url: url,
                     type: "post",
                     data: {
                         "content": this.searchText
                     },
-                    success: function (result) {
-                        if (result!= null) {
-                            alert("搜索成功");
-                            console.log(result);
+                    success: (result) => { // 使用箭头函数
+                        if (result != null) {
+                            const blogSection = document.querySelector('.search-results');
+                            if (result.length != 0) {
+                                this.isNull = false; // 更新状态
+                            } else {
+                                this.isNull = true; // 更新状态
+                            }
+                            blogSection.innerHTML = ''; // 清空现有内容
+                            result.forEach(data => {
+                                const article = document.createElement('div');
+                                article.classList.add('search-result');
+                                article.innerHTML = `
+                                <h2>${data.title}</h2>
+                                <p>${data.summary}</p>
+                                `;
+                                // 为每个article添加点击事件
+                                article.addEventListener('click', () => { // 这里也可以使用箭头函数
+                                    console.log('Article clicked:', data);
+                                    window.location.href = '/api/blog_' + data.id;
+                                });
+                                blogSection.appendChild(article);
+                            });
                         } else {
+                            this.isNull = true; // 更新状态
                             var errorInfo = result.data;
                             console.log(errorInfo);
                             alert(errorInfo);
                         }
                     }
+
+
                 });
             }
         }
     })
 </script>
 </html>
+

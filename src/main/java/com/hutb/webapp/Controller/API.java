@@ -35,6 +35,8 @@ public class API {
         }
     }
 
+
+    // 注册API
     @RequestMapping(value = "/signUp",method = RequestMethod.POST)
     public Message SignUp(SignUpRequest request) {
         System.out.println("Get a signUp request");
@@ -52,25 +54,31 @@ public class API {
         }
     }
 
+
+    // 获取置顶博客API
     @RequestMapping(value = "/blog-get-top")
     public List<Blog> BlogGetTop() {
         System.out.println("Get a blog-get-top request");
         return mapper.findTopBlog();
     }
 
+    // 获取博客模板API
     @RequestMapping(value = "/blog_{tempId}")
     public String tmpplatBlog() {
         System.out.println("Get a blog-get request");
-        return Data.html;
+        return Data.blogHtml;
     }
 
 
+    // 博客获取API
     @RequestMapping(value = "/blog/id={idValue}")
     public Blog blogGet(@PathVariable("idValue") Integer id) {
         System.out.println("Get a blog-get request");
         return mapper.findBlogById(id);
     }
 
+
+    //博客增加API
     @RequestMapping(value = "/blog/add",method = RequestMethod.POST)
     public Message blogAdd(Blog blog) {
         System.out.println("Get a blog-add request");
@@ -81,6 +89,22 @@ public class API {
             return new Message("Add blog failed",500,"Server Error");
     }
 
+
+    // 博客评论增加API
+    @RequestMapping(value = "/blog/comment/add",method = RequestMethod.POST)
+    public Message blogCommentAdd(Comment comment) {
+        System.out.println("Get a blog-comment add request");
+        Integer result = mapper.addComment(comment.getId(),comment.getUserId(),comment.getComment(),comment.getTimeAndPosition());
+        if(result!=null) {
+            System.out.println(result);
+            return success("Add comment success");
+        }
+        else
+            return new Message("Add comment failed",500,"Server Error");
+    }
+
+
+    // 博客搜索API
     @RequestMapping(value = "/blog/search",method = RequestMethod.POST)
     public List<Blog> blogSearch(String content) {
         System.out.println("Get a blog-search request");
@@ -95,6 +119,21 @@ public class API {
         }
     }
 
+
+    // 获取个人中心模板API
+    @RequestMapping(value = "/signalPage_{tempId}")
+    public String tmpplatSignalPage() {
+        System.out.println("Get a signalPage-get request");
+        return Data.signalPageHtml;
+    }
+
+
+    // 个人中心数据获取API
+//    @RequestMapping(value = "/signalPage/id={idValue}")
+//    public Blog blogGet(@PathVariable("idValue") Integer id) {
+//        System.out.println("Get a blog-get request");
+//        return mapper.findBlogById(id);
+//    }
 
 
 

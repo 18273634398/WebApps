@@ -13,6 +13,7 @@
             background: #f4f4f4;
             color: #333;
         }
+
         #container {
             width: 1200px; /* 设置版心宽度 */
             min-height: 955.5px; /* 设置版心最小高度 */
@@ -21,11 +22,13 @@
             background-color: #fff;
             overflow: auto; /* 确保内容超出时可以滚动 */
         }
+
         .header {
             text-align: center;
             padding-bottom: 20px;
             border-bottom: 1px solid #eaeaea;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -35,54 +38,118 @@
             background-color: #fff;
             /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
         }
+
         #topTitle {
             margin-left: 2em;
             font-size: 28px;
             color: #d33837;
         }
+
         .headers h1 {
             margin: 20px 0 0 0;
             font-size: 2.0em;
             font-weight: bold;
             color: #333;
         }
+
         .header img {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             cursor: pointer;
         }
+
         .header p {
             color: #a4a4a4;
             font-size: 0.9em;
         }
-       .textContent {
+
+        .textContent {
             text-indent: 2em;
             line-height: 1.8;
             font-size: 1.1em;
             margin-top: 20px;
         }
-        .textAuthor{
+
+        .textAuthor {
             color: #a4a4a4;
             font-size: 0.9em;
             margin-left: 10px;
         }
-        .textDate{
+
+        .textDate {
             color: #a4a4a4;
             font-size: 0.9em;
             margin-left: 10px;
         }
+
         .image-placeholder {
             text-align: center;
             margin-top: 20px;
             max-width: 100%;
             height: auto;
         }
+
+        #comments-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        #new-comment {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #post-comment {
+            padding: 10px 20px;
+            background-color: #f4f4f4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .comment-user {
+            font-weight: bold;
+        }
+
+        .comment-time {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .comment-content {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<!-- 导入jquery库，用于发送Ajax请求 -->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <body>
 <div id="container">
     <div class="headers">
@@ -109,24 +176,47 @@
             您的浏览器不支持视频播放。
         </video>
     </div>
+    <!-- 评论区 -->
+    <div id="comments-section">
+        <div class="comment-box">
+            <input type="text" id="new-comment" placeholder="发布你的评论" v-model="commentContent" @keyup.enter="submitComment"></input>
+            <button id="post-comment" @click="submitComment">评论</button>
+        </div>
+        <div class="comment-list">
+            <div class="comment">
+                <div class="comment-header">
+                    <span class="comment-user">用户名</span>
+                    <span class="comment-time">时间 地址</span>
+                </div>
+                <div class="comment-content">
+                    评论内容
+                </div>
+            </div>
+            <!-- 更多评论 -->
+        </div>
+    </div>
 </div>
 </body>
 <script>
     new Vue({
         el: '#container',
         data: {
+            id:'',
             textTitle: '文章标题',
             textDate: '2024-10-19',
             textAuthor: '作者',
             textContent: '文章内容',
             srcImg: '',
             srcVedio: '',
-            srcImgDesc: '图片描述'
+            srcImgDesc: '图片描述',
+            commentContent:'',
+            time:'' // 时间戳：用于评论的时间
         },
         mounted: function getBlogTop() {
             var currentUrl = window.location.href;
             var id = currentUrl.split("blog_")[1];
-            if (id!=-1) {
+            this.id = id;
+            if (id != -1) {
                 var url = "http://localhost:8080/api/blog/id=";
                 url += id;
                 console.log(url);
@@ -142,6 +232,28 @@
                         this.srcImg = result.image;       // 更新图片地址
                         this.srcVedio = result.video;     // 更新视频地址
                         this.srcImgDesc = result.imageDesc; // 更新图片描述
+                        console.log(result.comment);
+                        if (result.comment && result.comment.length > 0) {
+                            // 在这部分需要完成评论列表的渲染
+                            const commentSection = document.querySelector('.comment-list');
+                            commentSection.innerHTML = ''; // 清空现有内容
+                            JSON.parse(result.comment).forEach(data => {
+                                const comment = document.createElement('div');
+                                comment.classList.add('comment');
+                                comment.innerHTML = `
+                                    <div class="comment-header">
+                                        <span class="comment-user">${data.userId}</span>
+                                        <span class="comment-time">${data.timeAndPosition}</span>
+                                    </div>
+                                    <div class="comment-content">${data.comment}</div>
+                                `;
+                                commentSection.appendChild(comment);
+                            });
+                        } else {
+                            const commentSection = document.querySelector('.comment-list');
+                            commentSection.innerHTML = ''; // 清空现有内容
+                            console.log("没有评论");
+                        }
                     }.bind(this)  // 绑定 this 到当前 Vue 实例
                 });
             } else {
@@ -149,7 +261,38 @@
                 window.location.href = "./mainFrame.html";
             }
         },
-        methods: {}
+        methods: {
+            getTime: function () {
+                this.time = new Date().toLocaleString();
+            },
+            submitComment: function() {
+                this.getTime(); // 获取当前时间
+                const url = 'http://localhost:8080/api/blog/comment/add';
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: {
+                        "id": this.id,
+                        "userId": "guest",
+                        "comment": this.commentContent,
+                        "timeAndPosition": this.time
+                    },
+                    success: function(result) {
+                        if (result.message == "success") {
+                            alert("发布成功");
+                            location.reload();
+                        } else {
+                            var errorInfo = result.data;
+                            alert(errorInfo);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("请求失败:", error); // 错误处理
+                    }
+                });
+            }
+
+        }
     })
 </script>
 </html>

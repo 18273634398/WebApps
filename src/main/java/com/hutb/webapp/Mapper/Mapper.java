@@ -1,12 +1,10 @@
 package com.hutb.webapp.Mapper;
 
-import com.hutb.webapp.Pojo.Blog;
-import com.hutb.webapp.Pojo.SignInRequest;
-import com.hutb.webapp.Pojo.SignUpRequest;
-import com.hutb.webapp.Pojo.User;
+import com.hutb.webapp.Pojo.*;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -37,10 +35,13 @@ public interface Mapper {
     @Select("Select isAdmin from user where id = #{id}")
     public Integer isAdmin(@Param("id") Integer id);
 
-    @Insert("INSERT INTO blog(title, summary,date,author,content,isTop) VALUES(#{title},#{summary},#{date},#{author},#{content},#{isTop})")
+    @Insert("INSERT INTO blog(title, summary,date,author,content,isTop,comment) VALUES(#{title},#{summary},#{date},#{author},#{content},#{isTop},' ')")
     public Integer addBlog(Blog blog);
 
     @Select("SELECT * FROM blog WHERE (content like #{content} or title like #{content} or author like #{content} or summary like #{content})")
     public List<Blog> findBlogByContent(@Param("content") String content);
+
+    @Update("UPDATE blog SET comment = JSON_ARRAY_APPEND(comment, '$', JSON_OBJECT('userId', #{userId}, 'comment', #{comment},'timeAndPosition',#{timeAndPosition})) WHERE id = #{id}")
+    public Integer addComment(@Param("id") Integer id,@Param("userId") String userId,@Param("comment") String comment,@Param("timeAndPosition") String timeAndPosition);
 
 }

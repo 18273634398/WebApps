@@ -3,6 +3,13 @@ package com.hutb.webapp.Pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +26,5 @@ public class Blog {
     private String srcImgDesc;  // 博客图片描述
     private String srcVedio;    // 博客视频地址
     private int isTop;          // 是否置顶
+    private String comment; // 评论列表：使用字符串存储 同时使用#作为分隔符
 }

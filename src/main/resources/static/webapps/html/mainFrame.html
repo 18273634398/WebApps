@@ -236,7 +236,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <!-- 导入jquery库，用于发送Ajax请求 -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="container" id="app">
@@ -267,11 +268,12 @@
     <div id="sidebar">
         <a href="javascript:void(0)" class="closebtn" @click="toggleNav()">&times;</a>
         <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1">中国共产党基本理论学习</a>
-        <a href="#" id="func2" @click="openModal()">发布博客</a> <!-- 修改这里 -->
+        <a href="#" id="func2" @click="openModal()">发布博客</a>
         <a href="#" id="func3">博客分类</a>
         <a href="./result.html" id="func4" >博客搜索</a>
-        <a href="./weatherFrame.html" id="func5">天气查询</a>
-        <a href="http://localhost:8080/webapps/html/signIn.html" id="func6" rel="noopener" target="_blank">退出登录</a>
+        <a href= "signalPageUrl" id="func5" >个人中心</a>
+        <a href="./weatherFrame.html" id="func6">天气查询</a>
+        <a href="http://localhost:8080/webapps/html/signIn.html" id="func7" rel="noopener" target="_blank">退出登录</a>
         <!-- 更多功能链接 -->
     </div>
     <!-- 弹窗 -->
@@ -280,13 +282,13 @@
             <!-- 弹窗内容 -->
             <p><span>标题：</span><input type="text" v-model="inputTitle" class="modal-input"
                                         @keyup.enter="submitModal()"></p>
-            <p v-if="modalStatus === 1"><span>概述：</span><input type="text" v-model="inputSummary" class="modal-input">
+            <p><span>概述：</span><input type="text" v-model="inputSummary" class="modal-input">
             </p>
-            <p v-if="modalStatus === 1"><span>日期：</span><input type="text" v-model="inputDate" class="modal-input">
+            <p><span>日期：</span><input type="text" v-model="inputDate" class="modal-input">
             </p>
-            <p v-if="modalStatus === 1"><span>作者：</span><input type="text" v-model="inputAuthor" class="modal-input">
+            <p><span>作者：</span><input type="text" v-model="inputAuthor" class="modal-input">
             </p>
-            <p v-if="modalStatus === 1"><span>正文：</span><textarea class="modal-input" v-model="inputContent" rows="10"
+            <p><span>正文：</span><textarea class="modal-input" v-model="inputContent" rows="10"
                                                                     @keyup.enter="submitModal()"></textarea>
             </p>
             <div class="button-container">
@@ -302,6 +304,7 @@
     new Vue({
         el: '#app',
         data: {
+            id:0, // 登录用户id
             imgArr: [
                 "../source/picture/CPC_ChuXin.png",
                 "../source/picture/hutbPic1.jpg"
@@ -312,6 +315,7 @@
             inputDate: '',
             inputAuthor: '',
             inputContent: '',
+            signalPageUrl: "http://localhost:8080/webapps/html/signalPage"+this.id,
             modalStatus: false
         },
         mounted: function getBlogTop() {
