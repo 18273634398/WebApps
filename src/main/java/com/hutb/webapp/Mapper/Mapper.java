@@ -35,7 +35,7 @@ public interface Mapper {
     @Select("Select isAdmin from user where id = #{id}")
     public Integer isAdmin(@Param("id") Integer id);
 
-    @Insert("INSERT INTO blog(title, summary,date,author,content,isTop,comment) VALUES(#{title},#{summary},#{date},#{author},#{content},#{isTop},' ')")
+    @Insert("INSERT INTO blog(title, summary,date,author,content,isTop,comment) VALUES(#{title},#{summary},#{date},#{author},#{content},#{isTop},'[]')")
     public Integer addBlog(Blog blog);
 
     @Select("SELECT * FROM blog WHERE (content like #{content} or title like #{content} or author like #{content} or summary like #{content})")

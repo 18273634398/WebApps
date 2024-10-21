@@ -122,10 +122,11 @@ public class Data {
             "            border: none;\n" +
             "            border-radius: 5px;\n" +
             "            cursor: pointer;\n" +
+            "            font-weight: bold;\n" +
             "        }\n" +
             "\n" +
             "        .comment {\n" +
-            "            margin-bottom: 10px;\n" +
+            "            margin: 10 0 px;\n" +
             "            padding: 10px;\n" +
             "            border-bottom: 1px solid #eee;\n" +
             "        }\n" +
@@ -146,7 +147,8 @@ public class Data {
             "        }\n" +
             "\n" +
             "        .comment-content {\n" +
-            "            margin-bottom: 5px;\n" +
+            "            margin: 5 0px;\n" +
+            "            padding: 10px;\n" +
             "        }\n" +
             "    </style>\n" +
             "</head>\n" +
@@ -228,7 +230,6 @@ public class Data {
             "                    url: url,\n" +
             "                    type: \"get\",\n" +
             "                    success: function (result) {\n" +
-            "                        console.log(result);\n" +
             "                        this.textTitle = result.title;   // 更新文章标题\n" +
             "                        this.textDate = result.date;     // 更新日期\n" +
             "                        this.textAuthor = result.author;  // 更新作者\n" +
@@ -236,7 +237,6 @@ public class Data {
             "                        this.srcImg = result.image;       // 更新图片地址\n" +
             "                        this.srcVedio = result.video;     // 更新视频地址\n" +
             "                        this.srcImgDesc = result.imageDesc; // 更新图片描述\n" +
-            "                        console.log(result.comment);\n" +
             "                        if (result.comment && result.comment.length > 0) {\n" +
             "                            // 在这部分需要完成评论列表的渲染\n" +
             "                            const commentSection = document.querySelector('.comment-list');\n" +
@@ -246,7 +246,7 @@ public class Data {
             "                                comment.classList.add('comment');\n" +
             "                                comment.innerHTML = `\n" +
             "                                    <div class=\"comment-header\">\n" +
-            "                                        <span class=\"comment-user\">用户：${data.userId}</span>\n" +
+            "                                        <span class=\"comment-user\">${data.userId}</span>\n" +
             "                                        <span class=\"comment-time\">${data.timeAndPosition}</span>\n" +
             "                                    </div>\n" +
             "                                    <div class=\"comment-content\">${data.comment}</div>\n" +
