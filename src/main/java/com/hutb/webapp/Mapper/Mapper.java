@@ -1,10 +1,7 @@
 package com.hutb.webapp.Mapper;
 
 import com.hutb.webapp.Pojo.*;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -44,4 +41,9 @@ public interface Mapper {
     @Update("UPDATE blog SET comment = JSON_ARRAY_APPEND(comment, '$', JSON_OBJECT('userId', #{userId}, 'comment', #{comment},'timeAndPosition',#{timeAndPosition})) WHERE id = #{id}")
     public Integer addComment(@Param("id") Integer id,@Param("userId") String userId,@Param("comment") String comment,@Param("timeAndPosition") String timeAndPosition);
 
+    @Delete("DELETE FROM blog WHERE id = #{id}")
+    public Integer deleteBlogById(@Param("id") Integer id);
+
+    @Update("UPDATE blog SET title = #{title}, date = #{date}, author = #{author}, content = #{content}, isTop = #{isTop} WHERE id = #{id}")
+    public Integer bolgUpdate(Blog blog);
 }

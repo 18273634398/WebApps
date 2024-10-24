@@ -122,7 +122,7 @@
         }
 
         .comment {
-            margin: 10 0 px;
+            margin: 10 0px;
             padding: 10px;
             border-bottom: 1px solid #eee;
         }
@@ -143,8 +143,56 @@
         }
 
         .comment-content {
-            margin: 5 0px;
+            margin: 5px 0px;
             padding: 10px;
+        }
+        /* 弹窗内容样式 */
+        .modal-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9); /* 背景色和透明度 */
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 700px; /* 限制最大宽度 */
+            width: 70%; /* 占据水平方向70%的空间 */
+            max-height: 500px; /* 限制最大高度 */
+            height: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: auto; /* 在弹窗中居中 */
+            overflow-y: auto; /* 当内容超出高度时显示垂直滚动条 */
+            align-self: center;
+        }
+
+        /* 输入框和按钮样式 */
+        .modal-input, .modal-button {
+            width: 70%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #d33837;
+            border-radius: 5px;
+        }
+
+        /* 当输入框或文本域被聚焦时的样式 */
+        .modal-input:focus, .modal-button:focus {
+            outline: none; /* 移除默认的聚焦轮廓 */
+            border-color: #e2b604; /* 设置边框颜色为黄色 */
+            box-shadow: 0 0 5px #fdcf30; /* 可选：添加一个黄色的阴影效果 */
+        }
+
+        .modal-button {
+            margin-top: 20px;
+            background-color: #d33837;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-button:hover {
+            background-color: #ca2323;
         }
     </style>
 </head>
@@ -160,10 +208,15 @@
             <img src="https://img.picui.cn/free/2024/10/19/6713cb42a9def.jpeg" alt="用户头像" id="menu-icon">
         </div>
         <h1 class="textTitle" v-text="textTitle"></h1>
-        <p>
+        <p class="header-info" style="display: flex; justify-content: space-between; align-items: center;">
             <span class="textDate" id="" v-text="textDate"></span>
             <span>&nbsp;&nbsp;</span>
             <span class="textAuthor" v-text="textAuthor"></span>
+            <span style="margin-left: auto;">  <!-- 添加自动左边距，让修改图标右对齐 -->
+                <a  class="edit-icon" style="text-decoration: none; color: #a4a4a4;margin-right: 30px;" @click="editBlog">
+                    <img src="https://img.picui.cn/free/2024/10/24/6719e76bcca18.png" alt="修改" width="20" height="20">
+                </a>
+            </span>
         </p>
     </div>
     <div class="image-placeholder" v-show="srcImg">
@@ -178,10 +231,40 @@
             您的浏览器不支持视频播放。
         </video>
     </div>
+    <!-- 弹窗 -->
+    <div id="modal" v-if="modalStatus" class="modal hidden">
+        <div class="modal-content">
+            <!-- 弹窗内容 -->
+            <p>
+                <span>删除：</span>
+                <select v-model="inputDelete" class="modal-input" value="0">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </p>
+            <p v-if="inputDelete=='0'"><span>置顶：</span>
+                <select v-model="inputIsTop" class="modal-input">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </p>
+            <p v-if="inputDelete=='0'"><span>标题：</span><input type="text" v-model="inputTitle" class="modal-input">
+            <p v-if="inputDelete=='0'"><span>日期：</span><input type="text" v-model="inputDate" class="modal-input"></p>
+            <p v-if="inputDelete=='0'"><span>作者：</span><input type="text" v-model="inputAuthor" class="modal-input"></p>
+            <p v-if="inputDelete=='0'"><span>正文：</span><textarea class="modal-input" v-model="inputContent" rows="10"
+                                           @keyup.enter="submitModal()"></textarea>
+            </p>
+            <div class="button-container">
+                <button class="modal-button cancel" @click="openModal()">取消</button>
+                <button class="modal-button" @click="submitModal()">确认</button>
+            </div>
+        </div>
+    </div>
     <!-- 评论区 -->
     <div id="comments-section">
         <div class="comment-box">
-            <input type="text" id="new-comment" placeholder="发布你的评论" v-model="commentContent" @keyup.enter="submitComment"></input>
+            <input type="text" id="new-comment" placeholder="发布你的评论" v-model="commentContent"
+                   @keyup.enter="submitComment"></input>
             <button id="post-comment" @click="submitComment">评论</button>
         </div>
         <div class="comment-list">
@@ -203,7 +286,7 @@
     new Vue({
         el: '#container',
         data: {
-            id:'',
+            id: '',
             textTitle: '文章标题',
             textDate: '2024-10-19',
             textAuthor: '作者',
@@ -211,15 +294,23 @@
             srcImg: '',
             srcVedio: '',
             srcImgDesc: '图片描述',
-            commentContent:'',
-            time:'' // 时间戳：用于评论的时间
+            commentContent: '',
+            time: '' ,// 时间戳：用于评论的时间
+            modalStatus: false,
+            // 以下为弹窗输入框内容，配置默认项
+            inputTitle: '',
+            inputDate: '',
+            inputAuthor: '',
+            inputContent: '',
+            inputIsTop:1,
+            inputDelete:0
         },
         mounted: function getBlogTop() {
             var currentUrl = window.location.href;
             var id = currentUrl.split("blog_")[1];
             this.id = id;
             if (id != -1) {
-                var url = "http://localhost:8080/api/blog/id=";
+                var url = "http://localhost:8080/blog/id=";
                 url += id;
                 console.log(url);
                 $.ajax({
@@ -265,9 +356,9 @@
             getTime: function () {
                 this.time = new Date().toLocaleString();
             },
-            submitComment: function() {
+            submitComment: function () {
                 this.getTime(); // 获取当前时间
-                const url = 'http://localhost:8080/api/blog/comment/add';
+                const url = 'http://localhost:8080/blog/comment/add';
                 $.ajax({
                     url: url,
                     type: "post",
@@ -277,7 +368,7 @@
                         "comment": this.commentContent,
                         "timeAndPosition": this.time
                     },
-                    success: function(result) {
+                    success: function (result) {
                         if (result.message == "success") {
                             alert("发布成功");
                             location.reload();
@@ -286,12 +377,66 @@
                             alert(errorInfo);
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("请求失败:", error); // 错误处理
                     }
                 });
+            },
+            editBlog: function () {
+                this.openModal();
+            },
+            openModal() {
+                this.modalStatus = !this.modalStatus;
+                this.inputTitle = this.textTitle;
+                this.inputDate = this.textDate;
+                this.inputAuthor = this.textAuthor;
+                this.inputContent = this.textContent;
+            },
+            submitModal() {
+                if(this.inputDelete=='0'){
+                    url = "http://localhost:8080/blog/update";
+                    $.ajax({
+                        url: url,
+                        type: "post",
+                        data: {
+                            "id":this.id,
+                            "title": this.inputTitle,
+                            "date": this.inputDate,
+                            "author": this.inputAuthor,
+                            "content": this.inputContent,
+                            "isTop":this.inputIsTop
+                        },
+                        success: function (result) {
+                            if (result.message == "success") {
+                                alert("更改成功");
+                                window.location.reload();
+                            } else {
+                                var errorInfo = result.data;
+                                alert(errorInfo);
+                            }
+                        }
+                    });
+                }
+                else{
+                    url = "http://localhost:8080/blog/delete";
+                    $.ajax({
+                        url: url,
+                        type: "post",
+                        data: {
+                            "id":this.id,
+                        },
+                        success: function (result) {
+                            if (result.message == "success") {
+                                alert("删除成功");
+                                window.location.href = "./mainFrame.html";
+                            } else {
+                                var errorInfo = result.data;
+                                alert(errorInfo);
+                            }
+                        }
+                    });
+                }
             }
-
         }
     })
 </script>

@@ -105,7 +105,7 @@
         },
         methods: {
             search: function () {
-                url = "http://localhost:8080/api/blog/search";
+                url = "http://localhost:8080/blog/search";
                 $.ajax({
                     url: url,
                     type: "post",
@@ -131,7 +131,7 @@
                                 // 为每个article添加点击事件
                                 article.addEventListener('click', () => { // 这里也可以使用箭头函数
                                     console.log('Article clicked:', data);
-                                    window.location.href = '/api/blog_' + data.id;
+                                    window.location.href = '/blog_' + data.id;
                                 });
                                 blogSection.appendChild(article);
                             });

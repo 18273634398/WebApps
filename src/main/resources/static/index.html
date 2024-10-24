@@ -1,188 +1,408 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册页面</title>
+    <title>录播课？鲁博客！</title>
+    <link rel="icon" type="image/x-icon" href="../source/picture/CPC_Logo.png"/>
     <style>
-        /* 基本重置 */
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             color: #333;
-            line-height: 1.6;
-            padding-top: 50px;
         }
 
-        #register {
-            max-width: 400px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 0 20px;
             background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        h2 {
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #d33837;
+            background-color: #fff;
+            /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+        }
+
+        .header h1 {
+            margin-left: 2em;
+            font-size: 28px;
+            color: #d33837;
+        }
+
+        .header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #sidebar {
+            width: 0;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.9);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        #sidebar a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        #sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        #image-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            color: #007BFF;
+            margin: 20px 0;
+        }
+
+        #image-section img {
+            width: 100%;
+            max-width: 1000px;
+            max-height: 552px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); */ /* 阴影效果 */
+            border-radius: 10px;
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
+        .blog-section article {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
         }
 
-        input[type="button"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
+        .blog-section article:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-section article h2 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: #d33837;
+        }
+
+        .blog-section article p {
+            text-indent: 2em;
+        }
+
+        .buttonAS {
+            margin: 0 10px;
+            padding: 0 10px;
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            background-color: #d33837;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        input[type="button"]:hover {
-            background-color: #0056b3;
+        .buttonAS:hover {
+            background-color: #c02b2b;
         }
 
-        #message {
+        .buttonAS:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 105, 135, 0.5);
+        }
+
+        /* 可以添加一个激活状态的样式 */
+        .buttonAS:active {
+            transform: scale(0.98);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 弹窗内容样式 */
+        /* 弹窗内容样式 */
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 700px; /* 限制最大宽度 */
+            width: 70%; /* 占据水平方向70%的空间 */
+            max-height: 500px; /* 限制最大高度 */
+            height: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: auto; /* 在弹窗中居中 */
+            overflow-y: auto; /* 当内容超出高度时显示垂直滚动条 */
+            align-self: center;
+        }
+
+        /* 输入框和按钮样式 */
+        .modal-input, .modal-button {
+            width: 70%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #d33837;
+            border-radius: 5px;
+        }
+
+        /* 当输入框或文本域被聚焦时的样式 */
+        .modal-input:focus, .modal-button:focus {
+            outline: none; /* 移除默认的聚焦轮廓 */
+            border-color: #e2b604; /* 设置边框颜色为黄色 */
+            box-shadow: 0 0 5px #fdcf30; /* 可选：添加一个黄色的阴影效果 */
+        }
+
+        .modal-button {
             margin-top: 20px;
-            text-align: center;
+            background-color: #d33837;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .error {
-            color: red;
+        .modal-button:hover {
+            background-color: #ca2323;
         }
 
-        #vertifyCodeButton {
-            background: none; /* 去除背景 */
-            border: none; /* 去除边框 */
-            padding: 0; /* 去除内边距 */
-            margin: 0; /* 去除外边距 */
-            color: inherit; /* 继承父元素文字颜色 */
-            font: inherit; /* 继承父元素字体样式 */
-            text-align: left; /* 文本左对齐，可以根据需要调整 */
-            padding:10px 0;
+        /* 按钮容器样式 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* 取消按钮样式 */
+        .modal-button.cancel {
+            background-color: white;
+            color: #ca2323;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #f8f9fa;
         }
     </style>
-        </head>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- 导入jquery库，用于发送Ajax请求 -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</head>
 <body>
-<!-- 导入Vue开发环境版本，包含了有帮助的命令行警告 -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<!-- 导入axios库，用于发送Ajax请求 -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<div id="register">
-    <h2>注册</h2>
-    <form id="registrationForm">
-        <div class="form-group">
-            <input type="text" id="id" placeholder="用户名" required v-model="id">
+<div class="container" id="app">
+    <!-- 合并后的HTML内容 -->
+    <div class="header">
+        <h1>鲁博客 - 个人博客网</h1>
+        <img src="../source/picture/CPC.jpeg" alt="Logo" id="menu-icon" @click="toggleNav()">
+    </div>
+    <div id="image-section">
+        <button class="buttonAS" @click="sub()"><</button>
+        <img :src="imgArr[index]" alt="网站首页图" width="1312px" height="452px" style="object-fit: contain;">
+        <button class="buttonAS" @click="add()">></button>
+    </div>
+    <div class="blog-section">
+        <article>
+            <h2>博客文章 1 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+        <article>
+            <h2>博客文章 2 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+        <article>
+            <h2>博客文章 3 如果显示该内容，说明您的网络存在异常</h2>
+            <p>这里是本篇博客文章的概要。</p>
+        </article>
+    </div>
+    <div id="sidebar">
+        <a href="javascript:void(0)" rel="noopener" class="closebtn" @click="toggleNav()">&times;</a>
+        <a href="http://dangjian.people.com.cn/GB/436844/index.html" id="func1" rel="noopener">中国共产党基本理论学习</a>
+        <a href="#" id="func2" @click="openModal()">发布博客</a>
+        <a href="#" id="func3">博客分类</a>
+        <a href="./result.html" id="func4" rel="noopener">博客搜索</a>
+        <a :href= "signalPageUrl" id="func5" rel="noopener">个人中心</a>
+        <a href="./weatherFrame.html" id="func6" rel="noopener">天气查询</a>
+        <a href="http://localhost:8080/webapps/html/signIn.html"  id="func7" rel="noopener" target="_blank">退出登录</a>
+        <!-- 更多功能链接 -->
+    </div>
+    <!-- 弹窗 -->
+    <div id="modal" v-if="modalStatus" class="modal hidden">
+        <div class="modal-content">
+            <!-- 弹窗内容 -->
+            <p><span>标题：</span><input type="text" v-model="inputTitle" class="modal-input"
+                                        @keyup.enter="submitModal()"></p>
+            <p><span>概述：</span><input type="text" v-model="inputSummary" class="modal-input">
+            </p>
+            <p><span>日期：</span><input type="text" v-model="inputDate" class="modal-input">
+            </p>
+            <p><span>作者：</span><input type="text" v-model="inputAuthor" class="modal-input">
+            </p>
+            <p><span>正文：</span><textarea class="modal-input" v-model="inputContent" rows="10"
+                                           @keyup.enter="submitModal()"></textarea>
+            </p>
+            <div class="button-container">
+                <button class="modal-button cancel" @click="closeModal()">取消</button>
+                <button class="modal-button" @click="submitModal()">确认</button>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="email" id="email" placeholder="邮箱" required v-model="email">
-        </div>
-        <div class="form-group">
-            <input type="password" id="password" placeholder="密码" required v-model="password">
-        </div>
-        <div class="form-group">
-            <input type="text" id="captcha" placeholder="验证码" required v-model="inputVertifyCode" @keyup.enter="register" >
-            验证码：<input id="vertifyCodeButton" type="button" @click="getVertifyCode(4)" v-model="vertifyCode"></p>
-        </div>
-        <div class="form-group">
-            <input @click="register" type="button" value="注册">
-        </div>
-    </form>
-    <div id="message"></div>
+    </div>
 </div>
-<script>
 
+<script>
+    // Vue实例和方法
     new Vue({
-        el: '#register',
+        el: '#app',
         data: {
-            id: '',
-            password: '',
-            email: '',
-            vertifyCode: '点击刷新获取验证码',
-            inputVertifyCode: ''
+            id:0, // 登录用户id
+            imgArr: [
+                "../source/picture/CPC_ChuXin.png",
+                "../source/picture/hutbPic1.jpg"
+            ],
+            index: 0,
+            inputTitle: '',
+            inputSummary: '',
+            inputDate: '',
+            inputAuthor: '',
+            inputContent: '',
+            signalPageUrl: "http://localhost:8080/signalPage_",
+            modalStatus: false
+        },
+        mounted: function getBlogTop() {
+            this.signalPageUrl = this.signalPageUrl+this.id // 动态生成个人中心链接
+            console.log(this.signalPageUrl);
+            var url = "http://localhost:8080/blog-get-top";
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function (result) {    // 如果响应成功了(有响应)，则执行此回调函数  result 表示后端返回的结果
+                    const blogSection = document.querySelector('.blog-section');
+                    blogSection.innerHTML = ''; // 清空现有内容
+                    result.forEach(data => {
+                        const article = document.createElement('article');
+                        article.innerHTML = `
+                            <h2>${data.title}</h2>
+                            <p>${data.summary}</p>
+                        `;
+                        // 为每个article添加点击事件
+                        article.addEventListener('click', function () {
+                            console.log('Article clicked:', data);
+                            window.location.href = '/blog_' + data.id;
+                        });
+                        blogSection.appendChild(article);
+                    });
+                }
+            });
         },
         methods: {
-            getVertifyCode: function (n) {
-                var nums = '0123456789'
-                var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                var code = '';
-                var tempNum = Math.floor(Math.random() * 4); // 随机验证码中数字的位置
-                for (var i = 0; i < n; i++) {
-                    if (i === tempNum) {
-                        code += nums[Math.floor(Math.random() * nums.length)];
-                    }
-                    else {
-                        code += chars[Math.floor(Math.random() * chars.length)];
-                    }
+            sub: function () {
+                console.log("sub");
+                if (this.index > 0) {
+                    this.index--;
+                } else {
+                    this.index = this.imgArr.length - 1;
                 }
-                this.vertifyCode = code;
             },
-            register: function () {
-                if (this.email == "" || this.password == "" || this.id == "") {
-                    alert("账号密码或邮箱信息不能为空")
+            add: function () {
+                console.log("add");
+                if (this.index < this.imgArr.length - 1) {
+                    this.index++;
+                } else {
+                    this.index = 0;
                 }
-                else {
-                    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    if(this.email.match(regex)){
-                        if (this.vertifyCode != this.inputVertifyCode) {
-                            alert("验证码错误");
-                        }
-                        else {
-                            url = "http://localhost:8080/signUp/";
-                            var data = {
-                                id: this.id,
-                                password: this.password,
-                                email: this.email
-                            };
-                            axios.post(url, data).then(function (response) {
-                                console.log(response);
-                                alert("注册成功");
-                                window.location.href = "login.html";
-                            }).catch(function (error) {
-                                console.log(error);
-                                alert("注册失败");
-                            });
+            },
+            openModal() {
+                this.modalStatus = true;
+            },
+            closeModal() {
+                this.modalStatus = false;
+            },
+            submitModal() {
+                url = "http://localhost:8080/blog/add";
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: {
+                        "title": this.inputTitle,
+                        "summary": this.inputSummary,
+                        "date": this.inputDate,
+                        "author": this.inputAuthor,
+                        "content": this.inputContent,
+                        "isTop": 1
+                    },
+                    success: function (result) {
+                        if (result.message == "success") {
+                            alert("发布成功");
+                            window.location.href = "./mainFrame.html";
+                        } else {
+                            var errorInfo = result.data;
+                            alert(errorInfo);
                         }
                     }
-                    else{
-                        alert("邮箱格式不正确");
-                    }
+                });
+            },
+            toggleNav() {
+                var sidebarWidth = 280;
+                var sidebar = document.getElementById("sidebar");
+                if (sidebar.style.width === (sidebarWidth + "px")) {
+                    sidebar.style.width = "0";
+                } else {
+                    sidebar.style.width = sidebarWidth + "px";
                 }
             }
         }
-    })
+    });
 </script>
-
 </body>
-
 </html>

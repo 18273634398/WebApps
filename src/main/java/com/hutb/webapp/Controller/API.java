@@ -14,14 +14,13 @@ import java.util.List;
 import static com.hutb.webapp.Pojo.Message.success;
 
 @RestController
-@RequestMapping("/api")
 public class API {
     @Autowired
     private Mapper mapper;
 
     // 【实际API】
     // 登录API
-    @RequestMapping(value = "/signIn")
+    @RequestMapping(value = "/api/signIn")
     // 接受参数的原则都是保证前端传递数据的参数名和后端的一致
     // public Message SignIn(String username, String password) { SpringBoot 方法1
     public Message SignIn(SignInRequest request) { // SpringBoot 方法2 面向对象
@@ -89,6 +88,28 @@ public class API {
             return new Message("Add blog failed",500,"Server Error");
     }
 
+
+    // 博客修改API
+    @RequestMapping(value = "/blog/update",method = RequestMethod.POST)
+    public Message blogUpdate(Blog blog) {
+        System.out.println("Get a blog-update request");
+        Integer result = mapper.bolgUpdate(blog);
+        if(result!=null) // 删除成功
+            return success("Update blog success");
+        else // 删除失败
+            return new Message("Update blog failed",500,"Server Error");
+    }
+
+    // 博客删除API
+    @RequestMapping(value = "/blog/delete",method = RequestMethod.POST)
+    public Message blogDelete(Integer id) {
+        System.out.println("Get a blog-delete request");
+        Integer result = mapper.deleteBlogById(id);
+        if(result!=null) // 删除成功
+            return success("Delete blog success");
+        else // 删除失败
+            return new Message("Delete blog failed",500,"Server Error");
+    }
 
     // 博客评论增加API
     @RequestMapping(value = "/blog/comment/add",method = RequestMethod.POST)
